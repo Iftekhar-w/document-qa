@@ -49,7 +49,7 @@ else:
         #     stream=True,
         # )
 
-        model = genai.GenerativeModel('gemini-1.0-pro-latest')
+        model = genai.GenerativeModel('gemini-1.5-pro')
         response = model.generate_content(messages)
 
         # Stream the response to the app using `st.write_stream`.
