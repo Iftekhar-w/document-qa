@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import google.generativeai as genai
 
 # Show title and description.
 st.title("📄 Document question answering")
@@ -17,11 +17,11 @@ if not openai_api_key:
 else:
 
     # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+    genai.configure(api_key=openai_api_key)
 
     # Let the user upload a file via `st.file_uploader`.
     uploaded_file = st.file_uploader(
-        "Upload a document (.txt or .md)", type=("txt", "md")
+        "Upload a document (.txt or .md or .pdf)", type=("txt", "md", "pdf")
     )
 
     # Ask the user for a question via `st.text_area`.
@@ -43,11 +43,14 @@ else:
         ]
 
         # Generate an answer using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=messages,
-            stream=True,
-        )
+        # stream = client.chat.completions.create(
+        #     model="gpt-3.5-turbo",
+        #     messages=messages,
+        #     stream=True,
+        # )
+
+        model = genai.GenerativeModel('gemini-1.0-pro-latest')
+        response = model.generate_content(messages)
 
         # Stream the response to the app using `st.write_stream`.
-        st.write_stream(stream)
+        st.write_stream(response.text)
